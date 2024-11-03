@@ -14,32 +14,27 @@ class _ItemInputScreenState extends State<ItemInputScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFFFD700),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 171, left: 232),
-        child: Container(
-          width: 975,
-          height: 606,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(8)),
-          ),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  _buildTopSection(),
-                  const SizedBox(height: 20),
-                  _buildButtonGroup(),
-                  const SizedBox(height: 20),
-                  _buildMainContent(),
-                  const SizedBox(height: 20),
-                  _buildFooterButtons(context),
-                ],
-              ),
-            ),
+    return Container(
+      width: 975,
+      height: 700,
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFD700),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              _buildTopSection(),
+              const SizedBox(height: 20),
+              _buildButtonGroup(),
+              const SizedBox(height: 20),
+              _buildMainContent(),
+              const SizedBox(height: 20),
+              _buildFooterButtons(context),
+            ],
           ),
         ),
       ),
@@ -78,9 +73,13 @@ class _ItemInputScreenState extends State<ItemInputScreen> {
                   ),
                   child: const TextField(
                     textAlign: TextAlign.right,
+                    textAlignVertical: TextAlignVertical.center,
+                    style: TextStyle(height: 1),
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(10, 6, 10, 6),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                       border: InputBorder.none,
+                      isDense: true,
                     ),
                   ),
                 ),
@@ -131,9 +130,12 @@ class _ItemInputScreenState extends State<ItemInputScreen> {
           ),
           child: const TextField(
             textAlign: TextAlign.right,
+            textAlignVertical: TextAlignVertical.center,
+            style: TextStyle(height: 1),
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(10, 6, 10, 6),
+              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
               border: InputBorder.none,
+              isDense: true,
             ),
           ),
         ),
@@ -238,7 +240,6 @@ class _ItemInputScreenState extends State<ItemInputScreen> {
                   });
                 },
               )),
-              // Expanded(child: MyCustomWidget()),
             ],
           ),
         ),
@@ -276,7 +277,7 @@ class _ItemInputScreenState extends State<ItemInputScreen> {
               backgroundColor: const Color(0xFFFF9A00),
               textColor: Colors.white,
               onPressed: () {
-                print('Save button pressed');
+                showInputWidget2(context);
               },
             ),
           ],
@@ -344,7 +345,7 @@ class _InvoiceContactWidgetState extends State<InvoiceContactWidget> {
                     });
                   },
                 ),
-                Text('اضف لقائمة الاصناف', style: labelStyle),
+                const Text('اضف لقائمة الاصناف', style: labelStyle),
               ],
             ),
             Row(
@@ -358,7 +359,7 @@ class _InvoiceContactWidgetState extends State<InvoiceContactWidget> {
                     });
                   },
                 ),
-                Text('صنف غير نشط', style: labelStyle),
+                const Text('صنف غير نشط', style: labelStyle),
               ],
             ),
           ],
@@ -489,11 +490,9 @@ class InvoiceOtherWidget extends StatelessWidget {
                                 onClassificationChanged(newValue);
                               }
                             },
-                            // Remove the default dropdown arrow by setting it to an empty widget
                             icon: const SizedBox.shrink(),
                             isExpanded: true,
-                            underline:
-                                const SizedBox.shrink(), // Remove underline
+                            underline: const SizedBox.shrink(),
                             items: <String>['تصنيف 1', 'تصنيف 2', 'تصنيف 3']
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
@@ -502,7 +501,7 @@ class InvoiceOtherWidget extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(value), // Dropdown text
+                                    Text(value),
                                   ],
                                 ),
                               );
@@ -560,13 +559,10 @@ class InvoiceOtherWidget extends StatelessWidget {
 class MyCustomWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Define colors and styles
     const borderColor = Color(0xFFDEE2E6);
-    //const textColor = Color(0xFF000000);
     const headerBgColor = Color(0xFFF9F9F9);
     const cellBgColor = Color(0xFFF0F0F0);
 
-    // Define TextStyle
     const headerTextStyle = TextStyle(
       fontFamily: 'Arial',
       fontWeight: FontWeight.bold,
@@ -594,7 +590,7 @@ class MyCustomWidget extends StatelessWidget {
           ),
         ),
         Container(
-          color: const Color(0xFFEFF7E7), // Light green background color
+          color: const Color(0xFFEFF7E7),
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
@@ -725,7 +721,14 @@ class LabeledTextField extends StatelessWidget {
               ),
               child: TextField(
                 maxLines: isMultiLine ? null : 1,
-                decoration: const InputDecoration.collapsed(hintText: ''),
+                textAlignVertical: TextAlignVertical.center,
+                style: const TextStyle(height: 1),
+                decoration: const InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                  border: InputBorder.none,
+                  isDense: true,
+                ),
               ),
             ),
           ),
@@ -750,3 +753,70 @@ const labelStyle = TextStyle(
   fontSize: 10,
   color: Colors.black,
 );
+
+class WarningMessageWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 536,
+      height: 200,
+      padding: const EdgeInsets.fromLTRB(10, 35, 10, 25),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'تم الحفظ بنجاح',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+              color: Color(0xfff00b955),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 30),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
+            ),
+            child: const Text(
+              'عودة',
+              style: TextStyle(
+                fontFamily: 'Arial',
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+void showInputWidget2(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: WarningMessageWidget(),
+      );
+    },
+  );
+}

@@ -11,7 +11,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  intl: ^0.17.0
+  intl: ^0.18.0
+  board_datetime_picker: ^2.1.4
   flutter_svg: ^1.0.0
   flutter_lints: ^4.0.0
 flutter:

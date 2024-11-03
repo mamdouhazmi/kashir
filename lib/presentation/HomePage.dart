@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kashir/presentation/ExpensePage.dart';
+import 'package:kashir/presentation/SellPage.dart';
 import 'package:kashir/presentation/SettingsScreen.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,26 +21,32 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFF0F0F0), // AppBar color
         automaticallyImplyLeading: false,
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text(
-              'البضاعه',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+            Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10, vertical: 5), // Spacing within the box
+              color: Colors.white, // White background for only the content area
+              child: const Row(
+                children: [
+                  Text(
+                    'البضاعه',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(width: 10), // Spacing between the text and icons
+                  Icon(Icons.home, size: 24, color: Colors.black),
+                  SizedBox(width: 10),
+                  Icon(Icons.close, size: 24, color: Colors.grey),
+                ],
               ),
             ),
-            Row(
-              children: [
-                Icon(Icons.home, size: 24, color: Colors.black),
-                SizedBox(width: 10),
-                Icon(Icons.close, size: 24, color: Colors.grey),
-              ],
-            )
           ],
         ),
       ),
@@ -95,14 +103,15 @@ class _HomePageState extends State<HomePage> {
                     buildButtonRow([
                       buildButton('شراء', './assets/Maskgroup.png',
                           onPressed: () {
-                        Navigator.pushNamed(context, '/purchase');
+                        Navigator.pushNamed(context, '/expenseAnalysis');
                       }),
                       buildButton(
                         'بيع',
                         './assets/foundation_burst-sale.png',
                         onPressed: () {
                           // Navigate to the AccountScreen
-                          Navigator.pushNamed(context, '/expenseAnalysis');
+
+                          Navigator.pushNamed(context, '/purchase');
                         },
                       ),
                       buildButton(
@@ -149,22 +158,12 @@ class _HomePageState extends State<HomePage> {
                               '/sale'); // This should navigate to SalePage
                         },
                       ),
-                      buildButton(
-                        'سند قبض',
-                        './assets/Vector.png',
-                        onPressed: () {
-                          // Navigate to the AccountScreen
-                          Navigator.pushNamed(context, '/expense');
-                        },
-                      ),
-                      buildButton(
-                        'سند بيع', './assets/Vector.png',
-                        onPressed: () {
-                          // Navigate to the AccountScreen
-                          Navigator.pushNamed(context, '/sell');
-                        },
-                        // This should now work fine
-                      ),
+                      buildButton('سند قبض', './assets/Vector.png',
+                          onPressed: () => showExpensePopup(context)),
+
+                      buildButton('سند بيع', './assets/Vector.png',
+                          onPressed: () => showSellPopup(context))
+                      // This should now work fine
                     ]),
                     buildButtonRow([
                       buildButton('اعداد شعله', './assets/settings.png',
@@ -278,6 +277,34 @@ class _HomePageState extends State<HomePage> {
         }).toList(),
         onChanged: onChanged,
       ),
+    );
+  }
+
+  void showSellPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.white,
+      builder: (BuildContext context) {
+        return const Positioned(
+          top: 95,
+          left: 236,
+          child: SellPopup(),
+        );
+      },
+    );
+  }
+
+  void showExpensePopup(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.white,
+      builder: (BuildContext context) {
+        return const Positioned(
+          top: 95,
+          left: 236,
+          child: ExpensePopup(),
+        );
+      },
     );
   }
 

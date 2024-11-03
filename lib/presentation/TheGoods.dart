@@ -184,8 +184,10 @@ class _TheGoodsState extends State<TheGoods> {
               const SizedBox(height: 10),
               _buildSideButtonRow([
                 _buildSideButton('طباعة الاصناف', './assets/print.png', () {}),
-                _buildSideButton(
-                    'تقرير حركه الصنف', './assets/bxs_file.png', () {}),
+                _buildSideButton('تقرير حركه الصنف', './assets/bxs_file.png',
+                    () {
+                  Navigator.pushNamed(context, '/ProductReport');
+                }),
               ]),
               const SizedBox(height: 10),
               _buildSideButtonRow([
@@ -423,7 +425,7 @@ class _TheGoodsState extends State<TheGoods> {
       Function(String?) onChanged, String currentValue) {
     return Container(
       width: 92,
-      height: 26,
+      height: 35,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black.withOpacity(0.1)),
@@ -497,7 +499,7 @@ class _TheGoodsState extends State<TheGoods> {
         padding: const EdgeInsets.all(8),
         child: const Center(
           child: Text(
-            'sample',
+            '',
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
         ),
@@ -700,7 +702,8 @@ class _BarcodePrintingWidgetState extends State<BarcodePrintingWidget> {
               setState(() {
                 isPressed1 = !isPressed1;
               });
-              print("Printing barcode for selected item only");
+              Navigator.pushNamed(context, '/theGoods');
+              isPressed1 = true;
             },
           ),
           const SizedBox(height: 8),

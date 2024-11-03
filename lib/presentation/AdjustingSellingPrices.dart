@@ -42,13 +42,7 @@ class _AdjustingSellingPricesState extends State<AdjustingSellingPrices> {
           children: [
             _buildHeader(context),
             Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _buildMainContent(),
-                  ),
-                ],
-              ),
+              child: _buildMainContent(),
             ),
             _buildFooter(),
           ],
@@ -63,111 +57,43 @@ class _AdjustingSellingPricesState extends State<AdjustingSellingPrices> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Flexible(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Flexible(
-                  child: _buildHeaderButton(
-                    './assets/close.png',
-                    'اغلاق',
-                    () {
-                      Navigator.of(context).pop();
-                    },
-                    context,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Flexible(
-                  child: _buildHeaderButton(
-                    './assets/icon-park-solid_update-rotation.png',
-                    'تحديث',
-                    () {
-                      print("تحديث clicked");
-                    },
-                    context,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Flexible(
-                  child: _buildHeaderButton(
-                    './assets/correct.png',
-                    'حفظ',
-                    () {},
-                    context,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 250),
-          const Flexible(
-            child: Text(
-              'تعديل اسعار البيع ',
-              style: TextStyle(
-                color: Color(0xFFFF9A00),
-                fontSize: 50,
-                fontWeight: FontWeight.bold,
+          Row(
+            children: [
+              _buildHeaderButton(
+                './assets/close.png',
+                'اغلاق',
+                () {
+                  Navigator.of(context).pop();
+                },
+                context,
               ),
+              const SizedBox(width: 8),
+              _buildHeaderButton(
+                './assets/icon-park-solid_update-rotation.png',
+                'تحديث',
+                () {
+                  print("تحديث clicked");
+                },
+                context,
+              ),
+              const SizedBox(width: 8),
+              _buildHeaderButton(
+                './assets/correct.png',
+                'حفظ',
+                () {},
+                context,
+              ),
+            ],
+          ),
+          const Text(
+            'تعديل اسعار البيع ',
+            style: TextStyle(
+              color: Color(0xFFFF9A00),
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget dropDownButton(String text, List<Map<String, dynamic>> options,
-      Function(String?) onChanged, String currentValue) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black.withOpacity(0.1)),
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: DropdownButton<String>(
-        value: currentValue,
-        icon: Image.asset('./assets/Arraw.png', height: 12),
-        underline: const SizedBox(),
-        items: options.map((option) {
-          return DropdownMenuItem<String>(
-            value: option['label'],
-            child: Row(
-              children: [
-                Icon(option['icon'],
-                    size: 18, color: Colors.black.withOpacity(0.6)),
-                const SizedBox(width: 8),
-                Text(
-                  option['label'],
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black.withOpacity(0.6),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }).toList(),
-        onChanged: onChanged,
-      ),
-    );
-  }
-
-  Widget _buildMainContent() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.end, // Changed from start to end
-          children: [
-            const SizedBox(height: 10),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: _buildDataTable(),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -181,6 +107,26 @@ class _AdjustingSellingPricesState extends State<AdjustingSellingPrices> {
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFFE9F9F0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+    );
+  }
+
+  Widget _buildMainContent() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Directionality(
+              textDirection: TextDirection.rtl,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: _buildDataTable(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -210,7 +156,7 @@ class _AdjustingSellingPricesState extends State<AdjustingSellingPrices> {
         padding: const EdgeInsets.all(8),
         child: const Center(
           child: Text(
-            'sample',
+            '',
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
         ),
@@ -239,6 +185,44 @@ class _AdjustingSellingPricesState extends State<AdjustingSellingPrices> {
       child: Text(
         label,
         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      ),
+    );
+  }
+
+  Widget _buildFooter() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: _buildFieldSelectionColumn()),
+              Expanded(child: _buildCalculationBaseColumn()),
+              Expanded(child: _buildCalculationMethodColumn()),
+            ],
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              // Add functionality for calculating selling prices
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFCC50E),
+              minimumSize: const Size(200, 40),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: const Text(
+              'حساب اسعار البيع',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -276,8 +260,7 @@ class _AdjustingSellingPricesState extends State<AdjustingSellingPrices> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text(title, style: const TextStyle(fontSize: 14)),
-          const SizedBox(
-              width: 8), // Add some space between text and radio button
+          const SizedBox(width: 8),
           SizedBox(
             width: 24,
             height: 24,
@@ -299,75 +282,6 @@ class _AdjustingSellingPricesState extends State<AdjustingSellingPrices> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildFooter() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: _buildFieldSelectionColumn()),
-              Expanded(child: _buildCalculationBaseColumn()),
-              Expanded(child: _buildCalculationMethodColumn()),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: ElevatedButton(
-              onPressed: () {
-                // Add functionality for calculating selling prices
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFCC50E),
-                minimumSize: const Size(168, 35),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: const Text(
-                'حساب اسعار البيع',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCalculateButton() {
-    return Align(
-      alignment: Alignment.bottomLeft,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: ElevatedButton(
-          onPressed: () {
-            // Add functionality for calculating selling prices
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFFCC50E),
-            fixedSize: const Size(168, 35),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(10)),
-            ),
-          ),
-          child: const Text(
-            'حساب اسعار البيع',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
       ),
     );
   }

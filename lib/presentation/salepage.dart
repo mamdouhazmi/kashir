@@ -1,42 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as flutter;
+import 'package:intl/intl.dart' as intl;
 
-class SalePage extends StatefulWidget {
-  const SalePage({Key? key}) : super(key: key);
+class SalePage extends flutter.StatefulWidget {
+  const SalePage({flutter.Key? key}) : super(key: key);
 
   @override
   _SalePageState createState() => _SalePageState();
 }
 
-class _SalePageState extends State<SalePage> {
+class _SalePageState extends flutter.State<SalePage> {
   String _selectedPaymentOption = 'درج النقديه';
+  flutter.TextEditingController dateController =
+      flutter.TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF0F0F0), // Light grey background color
-        body: Container(
-          padding:
-              const EdgeInsets.all(16.0), // Added padding for better layout
-          child: SafeArea(
-            child: Column(
+  flutter.Widget build(flutter.BuildContext context) {
+    return flutter.Directionality(
+      textDirection:
+          flutter.TextDirection.rtl, // Setting text direction correctly
+      child: flutter.Scaffold(
+        backgroundColor: const flutter.Color(0xFFF0F0F0),
+        body: flutter.Container(
+          padding: const flutter.EdgeInsets.all(16.0),
+          child: flutter.SafeArea(
+            child: flutter.Column(
               children: [
-                _buildHeader(),
-                const SizedBox(
-                    height: 16), // Added space between header and buttons
-                _buildActionButtons(),
-                const SizedBox(
-                    height: 16), // Added space between buttons and content
-                Expanded(
-                  child: Row(
-                    // Replace Expanded with Row for alignment
+                _buildHeader(context),
+                const flutter.SizedBox(height: 16),
+                flutter.Expanded(
+                  child: flutter.Row(
+                    crossAxisAlignment: flutter.CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child:
-                            _buildMainContent(), // Main content takes the remaining space
+                      flutter.Expanded(
+                        child: flutter.Column(
+                          children: [
+                            _buildSearchAndInputs(),
+                            const flutter.SizedBox(height: 16),
+                            flutter.Expanded(child: _buildDataTable()),
+                          ],
+                        ),
                       ),
-                      _buildBottomSection(), // Buttons will now be on the right side
+                      const flutter.SizedBox(width: 16),
+                      _buildSideButtons(),
                     ],
                   ),
                 ),
@@ -48,46 +54,34 @@ class _SalePageState extends State<SalePage> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      color: Colors.white,
+      color: const Color(0xFFF0F0F0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              for (var tab in ['بيع', 'Tab 2', 'Tab 3', 'Tab 4'])
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text(tab),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          tab == 'بيع' ? const Color(0xFF0D99FF) : Colors.white,
-                      foregroundColor:
-                          tab == 'بيع' ? Colors.white : Colors.black,
-                      elevation: 0,
-                      minimumSize: const Size(80, 36),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(
-                          color: tab == 'بيع'
-                              ? Colors.transparent
-                              : Colors.grey.shade300,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-            ],
+          ElevatedButton.icon(
+            onPressed: () {},
+            icon: const Icon(Icons.close,
+                size: 18, color: Colors.black), // Close icon
+            label: const Text('بيع'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              elevation: 0,
+              minimumSize: const Size(80, 36),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
           ),
           ElevatedButton.icon(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            icon: Image.asset('./assets/close.png', height: 20),
+            icon: Image.asset('./assets/close.png',
+                height: 20), // Close icon image
             label: const Text('اغلاق'),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
@@ -105,91 +99,73 @@ class _SalePageState extends State<SalePage> {
     );
   }
 
-  Widget _buildActionButtons() {
-    final actions = [
-      {
-        'label': 'تعديل الكمية',
-        'icon': Icons.shopping_cart,
-        'onPressed': () {
-          // Action for 'تعديل الكمية'
-          showInputWidget(context);
-          // Add your specific logic here
-        },
-      },
-      {
-        'label': 'تعديل سعر الصنف',
-        'icon': Icons.local_offer,
-        'onPressed': () {
-          // Action for 'تعديل سعر الصنف'
-          showInputWidget1(context);
-          // Add your specific logic here
-        },
-      },
-      {
-        'label': 'المزيد',
-        'icon': Icons.more_horiz,
-        'onPressed': () {
-          // Action for 'المزيد'
-          showInputWidget2(context);
-          // Add your specific logic here
-        },
-      },
-      {
-        'label': 'حذف الصنف',
-        'icon': Icons.delete,
-        'onPressed': () {
-          // Action for 'حذف الصنف'
-          print('حذف الصنف button pressed');
-          // Add your specific logic here
-        },
-      },
-    ];
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      color: Colors.white,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: actions.map((action) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: ElevatedButton.icon(
-              onPressed: action['onPressed']
-                  as VoidCallback?, // Assign specific action
-              icon: Icon(action['icon'] as IconData, size: 20),
-              label: Text(action['label'] as String),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFE9F9F0),
-                foregroundColor: Colors.black,
-                elevation: 0,
-                minimumSize: const Size(120, 40),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+  Widget buildDateField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Container(
+          height: 48,
+          decoration: BoxDecoration(
+            color: Colors.grey[100], // Matching background color
+            borderRadius: BorderRadius.circular(8), // Rounded corners
+            border: Border.all(color: Colors.transparent), // Remove border
+          ),
+          child: Row(children: [
+            Expanded(
+              child: TextField(
+                controller: dateController,
+                textAlign: TextAlign.right,
+                textAlignVertical: TextAlignVertical.center,
+                style: const TextStyle(fontSize: 14),
+                readOnly: true,
+                decoration: InputDecoration(
+                  hintText: 'التاريخ', // Hint text in Arabic
+                  hintStyle: TextStyle(
+                    color: Colors.grey[900],
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 16), // Adjusted vertical padding
+                  border: InputBorder.none,
+                  isDense: true,
                 ),
               ),
             ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _buildMainContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _buildFormFields(),
-        const SizedBox(height: 16),
-        _buildPaymentOptions(),
-        const SizedBox(height: 16),
-        Expanded(child: _buildDataTable()),
+            GestureDetector(
+              onTap: () => _selectDate(context),
+              child: Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.calendar_today, size: 20),
+              ),
+            ),
+          ]),
+        ),
       ],
     );
   }
 
-  Widget _buildFormFields() {
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        dateController.text = intl.DateFormat('yyyy-MM-dd').format(picked);
+      });
+    }
+  }
+
+  Widget _buildSearchAndInputs() {
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -199,33 +175,29 @@ class _SalePageState extends State<SalePage> {
           Row(
             children: [
               Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'ابحث عن اسم الصنف',
-                    suffixIcon: const Icon(Icons.search),
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
+                flex: 2,
+                child: SizedBox(
+                  height: 40,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'ابحث عن اسم الصنف',
+                      suffixIcon: const Icon(Icons.search),
+                      filled: true,
+                      fillColor: Colors.grey[100],
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 16),
                     ),
                   ),
                 ),
               ),
               const SizedBox(width: 16),
+              // Replacing 'التاريخ' field with buildDateField
               Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'التاريخ',
-                    suffixIcon: const Icon(Icons.calendar_today),
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
+                child: buildDateField(),
               ),
             ],
           ),
@@ -233,31 +205,84 @@ class _SalePageState extends State<SalePage> {
           Row(
             children: [
               Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'الحساب',
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
+                child: Column(
+                  children: [
+                    _buildTextField('الحساب'),
+                    const SizedBox(height: 8),
+                    _buildTextField('الملاحظات'),
+                  ],
                 ),
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'الملاحظات',
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
+              const SizedBox(width: 8),
+              SizedBox(
+                width: 407,
+                child: _buildPaymentOptions(),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Column(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(child: _buildTextField('الكميه')),
+                            const SizedBox(width: 16),
+                            Expanded(child: _buildTextField('خصم')),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(child: _buildTextField('بيع')),
+                            const SizedBox(width: 16),
+                            Expanded(child: _buildTextField('نوع الاضافه')),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                ),
+                  const SizedBox(width: 16),
+                  SizedBox(
+                    width: 401,
+                    height: 90,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildActionButton(
+                          'تعديل الكمية',
+                          Image.asset('./assets/Shopping.png',
+                              width: 24, height: 24),
+                          () => showInputWidget(context),
+                        ),
+                        _buildActionButton(
+                          'تعديل سعر الصنف',
+                          Image.asset('./assets/localOffer.png',
+                              width: 24, height: 24),
+                          () => showInputWidget1(context),
+                        ),
+                        _buildActionButton(
+                          'المزيد',
+                          Image.asset('./assets/icmore.png',
+                              width: 24, height: 24),
+                          () => showInputWidget2(context),
+                        ),
+                        _buildActionButton(
+                          'حذف الصنف',
+                          Image.asset('./assets/delete.png',
+                              width: 24, height: 24),
+                          () => print('حذف الصنف button pressed'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -267,40 +292,82 @@ class _SalePageState extends State<SalePage> {
   }
 
   Widget _buildPaymentOptions() {
-    final options = ['اجل', 'الخزينه', 'بطاقه الاتمان', 'درج النقديه'];
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: options.map((option) {
-          final isSelected = option == _selectedPaymentOption;
-          return Padding(
-            padding: const EdgeInsets.only(left: 8.0),
+    return Row(
+      children: [
+        for (var option in ['اجل', 'الخزينه', 'بطاقه الاتمان', 'درج النقديه'])
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2),
             child: ElevatedButton(
               onPressed: () {
                 setState(() {
                   _selectedPaymentOption = option;
                 });
               },
-              child: Text(option),
               style: ElevatedButton.styleFrom(
-                backgroundColor: isSelected
+                backgroundColor: _selectedPaymentOption == option
                     ? const Color(0xFFFCC50E)
                     : const Color(0xFFDEE2E6),
                 foregroundColor: Colors.black,
                 elevation: 0,
-                minimumSize: const Size(90, 36),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
+              child: Text(option, style: const TextStyle(fontSize: 12)),
             ),
-          );
-        }).toList(),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildTextField(String hintText) {
+    return TextField(
+      decoration: InputDecoration(
+        hintText: hintText,
+        filled: true,
+        fillColor: Colors.grey[100],
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+      ),
+    );
+  }
+
+  Widget _buildActionButton(
+      String buttonText, Widget iconImage, VoidCallback onPressed) {
+    return Container(
+      width: 86,
+      height: 90, // Increased height to prevent overflow
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFFE9F9F0),
+          foregroundColor: Colors.black,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14.4),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Replaced Icon with the Image widget
+            const SizedBox(height: 8), // Reduced spacing between icon and text
+            Text(
+              buttonText,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis, // Prevents text overflow
+              maxLines: 1, // Limits the text to a single line
+              style: const TextStyle(
+                  fontSize: 11), // Reduced font size to fit better
+            ),
+            iconImage,
+          ],
+        ),
       ),
     );
   }
@@ -327,17 +394,30 @@ class _SalePageState extends State<SalePage> {
       ),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: DataTable(
-          columnSpacing: 16,
-          headingRowColor: MaterialStateProperty.all(const Color(0xFFF6F6F6)),
-          columns:
-              columns.map((column) => DataColumn(label: Text(column))).toList(),
-          rows: List.generate(
-            10,
-            (index) => DataRow(
-              cells: List.generate(
-                10,
-                (cellIndex) => DataCell(Text('Sample')),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minWidth: MediaQuery.of(context).size.width *
+                0.85, // Adjusts width to fit columns
+          ),
+          child: DataTable(
+            columnSpacing: 1, // Increased spacing for better readability
+            headingRowColor: WidgetStateProperty.all(const Color(0xFFF6F6F6)),
+            columns: columns
+                .map((column) => DataColumn(
+                      label: Text(
+                        column,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ))
+                .toList(),
+            rows: List.generate(
+              10,
+              (index) => DataRow(
+                cells: List.generate(
+                  10,
+                  (cellIndex) =>
+                      const DataCell(Text('')), // Example empty cells
+                ),
               ),
             ),
           ),
@@ -346,54 +426,39 @@ class _SalePageState extends State<SalePage> {
     );
   }
 
-  Widget _buildBottomSection() {
+  Widget _buildSideButtons() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center, // Center vertically
-      crossAxisAlignment: CrossAxisAlignment.end, // Align to the right side
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(right: 16), // Adjust the padding
-          child: SizedBox(
-            width: 280, // Fixed width
-            height: 44, // Fixed height
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text('بيع'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xfff00b955),
-                foregroundColor: Colors.white,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
+        SizedBox(
+          width: 280,
+          height: 44,
+          child: ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xfff00b955),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
+            child: const Text('بيع'),
           ),
         ),
-        const SizedBox(height: 28.5), // Space between buttons
-        Padding(
-          padding: const EdgeInsets.only(right: 16), // Adjust the padding
-          child: SizedBox(
-            width: 280, // Fixed width
-            height: 44, // Fixed height
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFCC50E),
-                foregroundColor: Colors.black,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment
-                    .center, // Aligns icon and text in the center
-                children: [
-                  // Add the icon
-                  const SizedBox(
-                      width: 8), // Add space between the icon and the text
-                  const Text('حفظ / جديد'), // The text next to the icon
-                  Image.asset('./assets/correct.png', height: 20),
-                ],
+        const SizedBox(height: 16),
+        SizedBox(
+          width: 280,
+          height: 44,
+          child: ElevatedButton.icon(
+            onPressed: () {},
+            icon: Image.asset('./assets/correct.png', height: 20),
+            label: const Text('حفظ / جديد'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFCC50E),
+              foregroundColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
           ),
@@ -403,14 +468,56 @@ class _SalePageState extends State<SalePage> {
   }
 }
 
+void showInputWidget(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: EnterTheQuantityWidget(),
+      );
+    },
+  );
+}
+
+void showInputWidget1(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: EnterTheNewPriceWidget(),
+      );
+    },
+  );
+}
+
+void showInputWidget2(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: InputWidgetWithDiscount(),
+      );
+    },
+  );
+}
+
 class EnterTheQuantityWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 489,
-      height: 280, // Increased height to accommodate buttons
+      height: 280,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFCC00), // Yellow background color
+        color: const Color(0xFFFFCC00),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -454,12 +561,11 @@ class EnterTheQuantityWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: 106,
                 height: 34.64,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // Add functionality for "رجوع" button
                     Navigator.of(context).pop();
                   },
                   icon: Image.asset('assets/pajamas_go-back.png',
@@ -471,19 +577,14 @@ class EnterTheQuantityWidget extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFE9F9F0),
                     shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8),
-                        bottomLeft: Radius.circular(8),
-                        bottomRight: Radius.circular(8),
-                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
                     padding: const EdgeInsets.only(top: 10),
                   ),
                 ),
               ),
               const SizedBox(width: 150),
-              Container(
+              SizedBox(
                 width: 106,
                 height: 34.64,
                 child: ElevatedButton(
@@ -493,12 +594,7 @@ class EnterTheQuantityWidget extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF00B955),
                     shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8),
-                        bottomLeft: Radius.circular(8),
-                        bottomRight: Radius.circular(8),
-                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
                     padding: const EdgeInsets.only(top: 10),
                   ),
@@ -508,7 +604,6 @@ class EnterTheQuantityWidget extends StatelessWidget {
                   ),
                 ),
               ),
-// Space between buttons
             ],
           ),
         ],
@@ -522,9 +617,9 @@ class EnterTheNewPriceWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 489,
-      height: 280, // Increased height to accommodate buttons
+      height: 280,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFCC00), // Yellow background color
+        color: const Color(0xFFFFCC00),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -568,12 +663,11 @@ class EnterTheNewPriceWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: 106,
                 height: 34.64,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // Add functionality for "رجوع" button
                     Navigator.of(context).pop();
                   },
                   icon: Image.asset('assets/pajamas_go-back.png',
@@ -585,19 +679,14 @@ class EnterTheNewPriceWidget extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFE9F9F0),
                     shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8),
-                        bottomLeft: Radius.circular(8),
-                        bottomRight: Radius.circular(8),
-                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
                     padding: const EdgeInsets.only(top: 10),
                   ),
                 ),
               ),
               const SizedBox(width: 150),
-              Container(
+              SizedBox(
                 width: 106,
                 height: 34.64,
                 child: ElevatedButton(
@@ -607,12 +696,7 @@ class EnterTheNewPriceWidget extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF00B955),
                     shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8),
-                        bottomLeft: Radius.circular(8),
-                        bottomRight: Radius.circular(8),
-                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
                     padding: const EdgeInsets.only(top: 10),
                   ),
@@ -622,7 +706,6 @@ class EnterTheNewPriceWidget extends StatelessWidget {
                   ),
                 ),
               ),
-// Space between buttons
             ],
           ),
         ],
@@ -636,22 +719,22 @@ class InputWidgetWithDiscount extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 489,
-      height: 380, // Increased height to accommodate new input boxes
+      height: 380,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFCC00), // Yellow background color
+        color: const Color(0xFFFFCC00),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Padding(
-            padding: EdgeInsets.only(bottom: 20), // Added space before heading
+            padding: EdgeInsets.only(bottom: 20),
             child: Text(
-              'اسم الصنف-90', // Heading label
+              'اسم الصنف-90',
               style: TextStyle(
                 fontFamily: 'Arial',
                 fontWeight: FontWeight.bold,
-                fontSize: 24, // Adjusted font size for the heading
+                fontSize: 24,
                 color: Color(0xFFF9F9F9),
               ),
               textAlign: TextAlign.center,
@@ -775,12 +858,11 @@ class InputWidgetWithDiscount extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: 106,
                 height: 34.64,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // Add functionality for "رجوع" button
                     Navigator.of(context).pop();
                   },
                   icon: Image.asset('assets/pajamas_go-back.png',
@@ -792,19 +874,14 @@ class InputWidgetWithDiscount extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFE9F9F0),
                     shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8),
-                        bottomLeft: Radius.circular(8),
-                        bottomRight: Radius.circular(8),
-                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
                     padding: const EdgeInsets.only(top: 10),
                   ),
                 ),
               ),
               const SizedBox(width: 150),
-              Container(
+              SizedBox(
                 width: 106,
                 height: 34.64,
                 child: ElevatedButton(
@@ -814,12 +891,7 @@ class InputWidgetWithDiscount extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF00B955),
                     shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8),
-                        bottomLeft: Radius.circular(8),
-                        bottomRight: Radius.circular(8),
-                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
                     padding: const EdgeInsets.only(top: 10),
                   ),
@@ -835,46 +907,4 @@ class InputWidgetWithDiscount extends StatelessWidget {
       ),
     );
   }
-}
-
-void showInputWidget2(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: InputWidgetWithDiscount(),
-      );
-    },
-  );
-}
-
-void showInputWidget1(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: EnterTheNewPriceWidget(),
-      );
-    },
-  );
-}
-
-void showInputWidget(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: EnterTheQuantityWidget(),
-      );
-    },
-  );
 }

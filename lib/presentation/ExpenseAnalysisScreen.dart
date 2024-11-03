@@ -1,67 +1,102 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class ExpenseAnalysisScreen extends StatelessWidget {
-  const ExpenseAnalysisScreen({super.key});
+class ExpenseAnalysisScreen extends StatefulWidget {
+  const ExpenseAnalysisScreen({Key? key}) : super(key: key);
+
+  @override
+  _ExpenseAnalysisScreenState createState() => _ExpenseAnalysisScreenState();
+}
+
+class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
+  TextEditingController dateController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60), // Adjust height if needed
-        child: topBar(context), // Use the topBar as AppBar
+        preferredSize: const Size.fromHeight(50),
+        child: topBar(context),
       ),
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  vertical: 10.0,
-                  horizontal: 16.0), // Reduced padding to reduce space
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 10), // Reduced space after top bar
-                  const Text(
-                    'تحليل المصروفات',
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      fontSize: 48, // Font size retained
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFFF9A00),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 32),
+                const Text(
+                  'تحليل المصروفات',
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    fontSize: 42,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFFF9A00),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                Row(children: [
+                  Expanded(
+                    flex: 10,
+                    child: buildDateField(label: 'التاريخ'),
+                  ),
+                  const Expanded(
+                    flex: 1,
+                    child: Center(
+                      child: Text(
+                        'الي',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(
-                      height: 20), // Reduced space before input fields
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      inputField(label: 'الحساب', width: screenWidth * 0.18),
-                      const SizedBox(
-                          width: 16), // Space between input fields retained
-                      inputField(label: 'اسم البند', width: screenWidth * 0.18),
-                      const SizedBox(width: 16),
-                      inputField(
-                          label: 'الخزينه او البنك', width: screenWidth * 0.18),
-                      const SizedBox(width: 16),
-                      inputField(label: 'التاريخ', width: screenWidth * 0.18),
-                    ],
+                  Expanded(
+                    flex: 10,
+                    child: buildDateField(label: 'التاريخ'),
                   ),
-                  const SizedBox(height: 20), // Reduced space before divider
-                  const Divider(thickness: 1.5),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      dataColumn('مدفوعات الموردين',
-                          screenWidth * 0.45), // Column width retained
-                      dataColumn('بنود المصروفات', screenWidth * 0.45),
-                    ],
-                  ),
-                ],
-              ),
+                ]),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: inputField(label: 'الحساب'),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: inputField(label: 'اسم البند'),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: inputField(label: 'الخزينه او البنك'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                const Divider(color: Colors.grey, thickness: 1),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: dataTable(
+                        'مدفوعات الموردين',
+                        ['الاجمالي', 'الحساب', 'رقم الحساب'],
+                      ),
+                    ),
+                    const SizedBox(width: 24),
+                    Expanded(
+                      child: dataTable(
+                        'بنود المصروفات',
+                        ['الاجمالي', 'البند', 'رقم الحساب'],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
@@ -71,49 +106,44 @@ class ExpenseAnalysisScreen extends StatelessWidget {
 
   Widget topBar(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading: false, // Removes default back button
-      backgroundColor: Colors.white, // Change background color if needed
-      elevation: 0, // Remove shadow
-      flexibleSpace: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            closeButton(context),
-            const Text(
-              'شراء',
-              style: TextStyle(
-                fontSize: 28, // Adjusted font size for top bar
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF000000),
-              ),
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.white,
+      elevation: 0,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          closeButton(context),
+          const Text(
+            'شراء',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget closeButton(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pop();
-      },
+      onTap: () => Navigator.of(context).pop(),
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: const Color(0xFFE9F9F0),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
           children: [
-            Image.asset('./assets/close.png', height: 24),
-            const SizedBox(width: 5),
+            Image.asset('./assets/close.png', height: 20),
+            const SizedBox(width: 8),
             const Text(
               'اغلاق',
               style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
                 color: Colors.black,
               ),
             ),
@@ -123,73 +153,168 @@ class ExpenseAnalysisScreen extends StatelessWidget {
     );
   }
 
-  Widget inputField({required String label, required double width}) {
-    return Container(
-      width: width,
-      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: const Color(0xFF000000).withOpacity(0.7)),
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              label,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-            ),
+  Widget buildDateField({required String label}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          height: 40,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: Colors.grey.shade300),
           ),
-          const SizedBox(height: 6),
-          const TextField(
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () => _selectDate(context),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border(
+                      right: BorderSide(color: Colors.grey.shade300),
+                    ),
+                  ),
+                  child: const Icon(Icons.calendar_today, size: 20),
+                ),
+              ),
+              Expanded(
+                child: TextField(
+                  controller: dateController,
+                  textAlign: TextAlign.right,
+                  textAlignVertical: TextAlignVertical.center,
+                  style: const TextStyle(fontSize: 14),
+                  readOnly: true,
+                  decoration: const InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    border: InputBorder.none,
+                    isDense: true,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        dateController.text = DateFormat('yyyy-MM-dd').format(picked);
+      });
+    }
+  }
+
+  Widget inputField({required String label}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          height: 40,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: const TextField(
+            textAlign: TextAlign.right,
+            textAlignVertical: TextAlignVertical.center,
+            style: TextStyle(fontSize: 14),
             decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               border: InputBorder.none,
               isDense: true,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget dataColumn(String title, double width) {
+  Widget dataTable(String title, List<String> headers) {
     return Container(
-      width: width,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(4),
+      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
-            color: const Color(0xFFFF9A00),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: const BoxDecoration(
+              color: Color(0xFFFF9A00),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+            ),
             child: Text(
               title,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
-          ...List.generate(
-            10,
-            (index) => Container(
-              padding: const EdgeInsets.symmetric(
-                  vertical: 8, horizontal: 12), // Increased padding retained
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            color: const Color(0xFFFFEBCC),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: headers
+                  .map((header) => Text(
+                        header,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: 20,
+            itemBuilder: (context, index) => Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               decoration: BoxDecoration(
-                color: Colors.white,
                 border: Border(
-                  top: const BorderSide(color: Color(0xFFF0F0F0)),
-                  left: const BorderSide(color: Color(0xFFF0F0F0)),
-                  right: const BorderSide(color: Color(0xFFF0F0F0)),
-                  bottom: index == 9
-                      ? const BorderSide(color: Color(0xFFF0F0F0))
-                      : BorderSide.none,
+                  bottom: BorderSide(
+                    color: Colors.grey.shade200,
+                    width: 1,
+                  ),
                 ),
               ),
-              child: Text('بيانات $index',
-                  style: const TextStyle(fontSize: 14)), // Font size retained
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('كرتونه'),
+                  Text('اسم المالك-120 ملل'),
+                  Text('1'),
+                ],
+              ),
             ),
           ),
         ],

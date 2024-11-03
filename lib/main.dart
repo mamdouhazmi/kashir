@@ -4,6 +4,7 @@ import 'package:kashir/presentation/AdjustingSellingPrices.dart';
 import 'package:kashir/presentation/CashierScreen.dart';
 import 'package:kashir/presentation/ItemInputScreen.dart';
 import 'package:kashir/presentation/ProductEntryScreen.dart';
+import 'package:kashir/presentation/ProductReport.dart';
 import 'package:kashir/presentation/TheGoods.dart';
 import 'package:kashir/presentation/ExpenseAnalysisScreen.dart';
 import 'package:kashir/presentation/ExpensePage.dart';
@@ -34,8 +35,8 @@ class MyApp extends StatelessWidget {
         '/account': (context) => const AccountScreen(),
         '/purchase': (context) => const PurchasePage(),
         '/sale': (context) => const SalePage(),
-        '/sell': (context) => const SellPage(),
-        '/expense': (context) => const ExpensePage(),
+        '/sell': (context) => const SellPopup(),
+        '/expense': (context) => const ExpensePopup(),
         '/expenseAnalysis': (context) => const ExpenseAnalysisScreen(),
         '/storeInventory': (context) => const StoreinventoryPage(),
         '/theGoods': (context) => const TheGoods(),
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         '/itemInput': (context) => const ItemInputScreen(),
         '/cashier': (context) => const CashierScreen(),
         '/SellingPrices': (context) => const AdjustingSellingPrices(),
+        '/ProductReport': (context) => const ProductMovementReport(),
       },
     );
   }
