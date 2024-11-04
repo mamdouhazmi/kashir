@@ -141,11 +141,11 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                       buildButton(
-                        'مرتجع بيع',
+                        'الكاشير',
                         './assets/Vector.png',
                         onPressed: () {
                           Navigator.pushNamed(context,
-                              '/sale'); // This should navigate to SalePage
+                              '/Cashier'); // This should navigate to SalePage
                         },
                       ),
                     ]),
