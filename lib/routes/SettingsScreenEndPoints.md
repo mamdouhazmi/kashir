@@ -147,8 +147,3 @@ All endpoints require a valid JWT token in the Authorization header:
 - `403` - Forbidden (Insufficient permissions)
 - `404` - Setting not found
 - `500` - Internal Server Error
-
-
-```plaintext
-
-```
