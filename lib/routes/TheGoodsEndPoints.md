@@ -40,7 +40,7 @@ Request Body: {
 - `PUT /api/products/prices/single/{id}` - Update single product price
 
 ```json
- Request Body: {Request Body: {
+ Request Body: Request Body: {
   "sellingPrice": "number",
   "discount": "number",
   "minPrice": "number"
@@ -52,7 +52,7 @@ Request Body: {
 - `PUT /api/products/prices/bulk` - Bulk update prices
 
 ```json
- Request Body: {Request Body: {
+ Request Body: Request Body: {
   "productIds": "array",
   "priceAdjustment": {
     "type": "percentage|fixed",
@@ -71,7 +71,7 @@ Request Body: {
 - `POST /api/products/barcode/print/bulk` - Print barcodes for multiple products
 
 ```json
- Request Body: {Request Body: {
+ Request Body: Request Body: {
   "productIds": "array",
   "copies": "number"
 }
@@ -86,7 +86,7 @@ Request Body: {
 - `GET /api/reports/products/movement/{id}` - Get product movement report
 
 ```json
- Query Parameters: {Query Parameters: {
+ Query Parameters: Query Parameters: {
   "startDate": "date",
   "endDate": "date"
 }
@@ -97,7 +97,7 @@ Request Body: {
 - `GET /api/reports/inventory` - Get inventory report
 
 ```json
- Query Parameters: {Query Parameters: {
+ Query Parameters: Query Parameters: {
   "type": "current|movement",
   "startDate": "date",
   "endDate": "date"
@@ -109,7 +109,7 @@ Request Body: {
 - `GET /api/reports/products/serial` - Search by serial number
 
 ```json
- Query Parameters: {Query Parameters: {
+ Query Parameters: Query Parameters: {
   "serialNumber": "string"
 }
 
